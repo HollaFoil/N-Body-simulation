@@ -10,6 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="src\Assets\Shaders\Fragment.glsl" />
+    <None Remove="src\Assets\Shaders\Vertex.glsl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="src\Assets\Shaders\Fragment.glsl" />
+    <EmbeddedResource Include="src\Assets\Shaders\Vertex.glsl" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="GlmSharp" Version="0.9.8" />
   </ItemGroup>
 

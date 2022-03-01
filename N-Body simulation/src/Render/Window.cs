@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace N_Body_simulation.Render
+namespace N_Body_simulation.src.Render
 {
     internal static class Window
     {
@@ -44,7 +44,7 @@ namespace N_Body_simulation.Render
             Import(Glfw.GetProcAddress);
             glViewport(0, 0, width, height);
 
-            Glfw.SetInputMode(window, InputMode.Cursor, (int)CursorMode.Hidden);
+            Glfw.SetInputMode(window, InputMode.Cursor, (int)CursorMode.Normal);
         }
     }
 }
