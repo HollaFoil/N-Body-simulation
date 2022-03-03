@@ -11,7 +11,7 @@ namespace N_Body_simulation.src
     public class Camera
     {
         private vec3 directionPressed;
-        private float speed = 0.02f;
+        private float speed = 0.005f;
         vec3 position;
         vec2 facing;
         public Camera()

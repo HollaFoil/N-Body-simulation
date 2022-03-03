@@ -1,5 +1,6 @@
 ﻿using GLFW;
 using GlmSharp;
+using N_Body_simulation.src.Geometry;
 using N_Body_simulation.src.Render.Shaders;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,8 @@ namespace N_Body_simulation.src.Render
     internal static class RenderCore
     {
         static int viewLoc;
-        static uint vao, vbo;
+        static uint vao, vbo, ebo;
+        static int elements = 0;
 
         static ShaderProgram program;
         static RenderCore()
@@ -24,9 +26,9 @@ namespace N_Body_simulation.src.Render
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS);
             glClearColor(0.5f, 0.95f, 1.0f, 1.0f);
-
-            //glEnable(GL_CULL_FACE);
-            //glCullFace(GL_BACK);
+            //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_FRONT);
             Test();
         }
         static public void Flush()
@@ -40,27 +42,26 @@ namespace N_Body_simulation.src.Render
         {
             vao = glGenVertexArray();
             vbo = glGenBuffer();
+            ebo = glGenBuffer();
 
-            float[] vertices = {
-                // first triangle
-                    0.5f,  0.5f, 0.0f,  // top right
-                    0.5f, -0.5f, 0.0f,  // bottom right
-                -0.5f,  0.5f, 0.0f,  // top left 
-                // second triangle
-                    0.5f, -0.5f, 0.0f,  // bottom right
-                -0.5f, -0.5f, 0.0f,  // bottom left
-                -0.5f,  0.5f, 0.0f   // top left
-            };
+            CubeMesh.CreateSphereMesh(15, out float[] vertices, out uint[] triangles);
 
             glBindVertexArray(vao);
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
             fixed (void* ptr = &vertices[0]) {
-                glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 18, ptr, GL_STATIC_DRAW);
+                glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.Length, ptr, GL_STATIC_DRAW);
             }
-            // 3. then set our vertex attributes pointers
+
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+            fixed (void* ptr = &triangles[0])
+            {
+                glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * triangles.Length, ptr, GL_STATIC_DRAW);
+            }
+            
             glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * sizeof(float), (void*)0);
             glEnableVertexAttribArray(0);
+            elements = triangles.Length;
         }
         static public uint GetProgram()
         {
@@ -69,8 +70,8 @@ namespace N_Body_simulation.src.Render
         static private unsafe void RenderBuffers()
         {
             glUniformMatrix4fv(viewLoc, 1, false, Program._camera.GetLookAtMatrix().ToArray());
-            glBindBuffer(GL_ARRAY_BUFFER, vbo);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+            glDrawElements(GL_TRIANGLES, elements, GL_UNSIGNED_INT, null);
         }
         public static void RefreshProjectionMatrix()
         {
