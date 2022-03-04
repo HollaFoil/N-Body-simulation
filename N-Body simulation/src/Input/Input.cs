@@ -22,10 +22,33 @@ namespace N_Body_simulation.src.Input
         private static void KeyCallback(Window window, Keys key, int scancode, InputState state, ModifierKeys modifiers)
         {
             if (window == null) return;
+            //Debug(key, state, modifiers);
             if (state == InputState.Repeat || !Keybinds.ContainsKey(key)) return;
             IsKeyPressed[(int)Keybinds[key]] = !IsKeyPressed[(int)Keybinds[key]];
             ThrowEvents(key);
 
+        }
+        private static void Debug(Keys key, InputState state, ModifierKeys modifiers)
+        {
+            if (state != InputState.Press) return;
+
+            float val = 1.1f;
+            if (modifiers == ModifierKeys.Control) val = 0.9f;
+            //if (modifiers == ModifierKeys.Alt) val *= 0.92f;
+
+            Noise.NoiseSettings settings = Program.p.GetNoiseSettings();
+
+            if (key == Keys.Y) settings.persistance *= val;
+            if (key == Keys.U) settings.baseRoughness *= val;
+            if (key == Keys.I) settings.minvalue *= val;
+            if (key == Keys.O) settings.roughness *= val;
+            if (key == Keys.P) settings.strength *= val;
+
+            if (key == Keys.Right) settings.center.x *= val;
+            if (key == Keys.Down) settings.center.z *= val;
+            if (key == Keys.Up) settings.center.y *= val;
+
+            Program.p.SetNoiseSettings(settings);
         }
         private static void MouseCallback(Window window, double x, double y)
         {

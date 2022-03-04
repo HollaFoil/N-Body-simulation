@@ -10,12 +10,10 @@ namespace N_Body_simulation.src.Geometry
 {
     internal static class CubeMesh
     {
-        public static void CreateSphereMesh(uint faceResolution, out float[] vertices, out uint[] triangles)
+        public static void CreateCubeMesh(uint faceResolution, out List<vec3> vertices, out List<uint> triangles)
         {
-            vertices = new float[faceResolution * faceResolution * 18];
-            triangles = new uint[(faceResolution - 1) * (faceResolution - 1) * 36];
-            int offset1 = 0;
-            int offset2 = 0;
+            vertices = new List<vec3>((int)(faceResolution * faceResolution * 6));
+            triangles = new List<uint>((int)((faceResolution - 1) * (faceResolution - 1) * 36));
 
             vec3[] faces = { new vec3(0, 1, 0), new vec3(1, 0, 0), new vec3(0, 0, 1), new vec3(0, 0, -1), new vec3(0, -1, 0), new vec3(-1, 0, 0) };
             for (uint face = 0; face < 6; face++)
@@ -23,17 +21,13 @@ namespace N_Body_simulation.src.Geometry
                 FaceMesh.CreateFaceMesh(faceResolution, faces[face], face, out vec3[] v, out uint[] t);
                 for (int j = 0; j < faceResolution*faceResolution; j++)
                 {
-                    vertices[offset1] = v[j].Normalized.x;
-                    vertices[offset1 + 1] = v[j].Normalized.y;
-                    vertices[offset1 + 2] = v[j].Normalized.z;
-                    offset1 += 3;
+                    vertices.Add(v[j]);
                 }
                 for (int j = 0; j < (faceResolution - 1) * (faceResolution - 1) * 6; j++)
                 {
-                    triangles[offset2++] = t[j];
+                    triangles.Add(t[j]);
                 }
             }
-            Console.WriteLine();
         }
     }
 }

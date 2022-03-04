@@ -1,5 +1,6 @@
 ﻿using GLFW;
 using N_Body_simulation.src;
+using N_Body_simulation.src.Entity;
 using N_Body_simulation.src.Input;
 using N_Body_simulation.src.Render;
 using System;
@@ -14,9 +15,12 @@ namespace N_Body_simulation // Note: actual namespace depends on the project nam
         public static Camera _camera;
         static Timer frameTimer;
         const int TargetFramerate = 60;
+        public static Planet p = new Planet();
         static void Main()
         {
             Init();
+            
+            RenderCore.BufferPlanet(p);
             while (!Glfw.WindowShouldClose(Window.GetWindow()))
             {
                 //Console.WriteLine("working");
@@ -29,7 +33,7 @@ namespace N_Body_simulation // Note: actual namespace depends on the project nam
                     Console.WriteLine(_camera.GetYawPitch());
                 }
             }
-            Thread.Sleep(10000);
+            //Thread.Sleep(10000);
         }
 
         static private void Init()

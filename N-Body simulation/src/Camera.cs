@@ -31,8 +31,8 @@ namespace N_Body_simulation.src
             facing += e.GetChange();
             if (facing.x <= -180.0f) facing.x += 360.0f;
             if (facing.x > 180.0f) facing.x -= 360.0f;
-            if (facing.y < -90.0f) facing.y = -90.0f;
-            if (facing.y > 90.0f) facing.y = 90.0f;
+            if (facing.y < -89.9f) facing.y = -89.9f;
+            if (facing.y > 89.9f) facing.y = 89.9f;
         }
         public void Update(int elapsedTime)
         {

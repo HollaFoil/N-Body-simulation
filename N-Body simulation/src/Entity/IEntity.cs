@@ -10,6 +10,7 @@ namespace N_Body_simulation.src.Entity
 {
     public class IEntity : ITickable
     {
+        protected int ID = -1;
         protected vec3 position;
         protected vec2 facing;
         public vec3 GetPosition()
@@ -19,6 +20,14 @@ namespace N_Body_simulation.src.Entity
         public vec2 GetYawPitch()
         {
             return facing;
+        }
+        public int GetID ()
+        {
+            return ID;
+        }
+        public void SetID (int i)
+        {
+            ID = i;
         }
     }
 }
