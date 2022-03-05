@@ -32,7 +32,7 @@ namespace N_Body_simulation.src.Render
             RefreshProjectionMatrix();
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS);
-            glClearColor(0.5f, 0.95f, 1.0f, 1.0f);
+            glClearColor(0f, 0f, 0f, 1.0f);
             //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             //glEnable(GL_CULL_FACE);
             //glCullFace(GL_FRONT);

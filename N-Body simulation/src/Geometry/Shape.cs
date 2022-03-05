@@ -12,7 +12,6 @@ namespace N_Body_simulation.src.Geometry
         private List<vec3> vertices;
         private List<uint> triangles;
         private List<vec3> normals;
-
         public Shape()
         {
             vertices = new List<vec3>();
@@ -63,14 +62,28 @@ namespace N_Body_simulation.src.Geometry
 
         public void CalculateNormals()
         {
+            int resolution = (int)Math.Sqrt(vertices.Count / 6);
+            Dictionary<vec3, List<int>> repeatingVerts = new Dictionary<vec3, List<int>>();
             normals = new List<vec3>(vertices.Count);
             for (int i = 0; i < vertices.Count; i++)
             {
                 normals.Add(new vec3(0,0,0));
+                var v = vertices[i];
+                if (repeatingVerts.TryGetValue(v, out List<int> verts))
+                {
+                    verts.Add(i);
+                }
+                else
+                {
+                    verts = new List<int>();
+                    verts.Add(i);
+                    repeatingVerts.Add(v, verts);
+                }
             }
 
             for (int i = 0; i < triangles.Count; i += 3)
             {
+                
                 int a = (int) triangles[i];
                 int b = (int) triangles[i + 1];
                 int c = (int) triangles[i + 2];
@@ -79,10 +92,27 @@ namespace N_Body_simulation.src.Geometry
                 vec3 v2 = vertices[b];
                 vec3 v3 = vertices[c];
 
-                vec3 sum = glm.Cross(v1, v2) + glm.Cross(v2, v3) + glm.Cross(v3, v1);
+                vec3 edge1 = v2 - v1;
+                vec3 edge2 = v3 - v1;
+
+                vec3 sum = (glm.Cross(edge1, edge2)).NormalizedSafe;
                 normals[a] += sum;
                 normals[b] += sum;
                 normals[c] += sum;
+
+                if (repeatingVerts.TryGetValue(v1, out List<int> verts1))
+                {
+                    foreach (var v in verts1) if (v != a) normals[v] += sum;
+                }
+                if (repeatingVerts.TryGetValue(v2, out List<int> verts2))
+                {
+                    foreach (var v in verts2) if (v != b) normals[v] += sum;
+                }
+                if (repeatingVerts.TryGetValue(v3, out List<int> verts3))
+                {
+                    foreach (var v in verts3) if (v != c) normals[v] += sum;
+                }
+
             }
             for (int i = 0; i < vertices.Count; i++)
             {

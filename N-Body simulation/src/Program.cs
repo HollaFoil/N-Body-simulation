@@ -23,14 +23,11 @@ namespace N_Body_simulation // Note: actual namespace depends on the project nam
             RenderCore.BufferPlanet(p);
             while (!Glfw.WindowShouldClose(Window.GetWindow()))
             {
-                //Console.WriteLine("working");
                 GLFW.Glfw.PollEvents();
                 if (frameTimer.Next(out int elapsedMilliseconds))
                 {
                     _camera.Update(elapsedMilliseconds);
                     RenderCore.Flush();
-                    Console.WriteLine(_camera.GetPosition());
-                    Console.WriteLine(_camera.GetYawPitch());
                 }
             }
             //Thread.Sleep(10000);
