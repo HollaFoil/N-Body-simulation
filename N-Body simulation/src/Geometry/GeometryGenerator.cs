@@ -1,4 +1,5 @@
 ﻿using GlmSharp;
+using N_Body_simulation.src.Noise;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,13 +32,22 @@ namespace N_Body_simulation.src.Geometry
                 vertices[i] = vertices[i] * scaleFactor;
             }
         }
-        public static void TurnSphereIntoTerrain(Shape sphere, Noise.NoiseFilter NoiseFilter)
+        public static void TurnSphereIntoTerrain(Shape sphere, Noise.NoiseFilter[] NoiseFilters)
         {
             var vertices = sphere.GetVertices();
             for (int i = 0; i < vertices.Count; i++)
             {
-                vertices[i] *= (1+(float)NoiseFilter.Evaluate(vertices[i]));
+                float elevation = 0;
+                elevation += EvaluateAtPoint(vertices[i], NoiseFilters[0]);
+                float mask = elevation;
+
+                elevation += EvaluateAtPoint(vertices[i], NoiseFilters[1]) * mask;
+                vertices[i] *= (1 + elevation);
             }
+        }
+        public static float EvaluateAtPoint(vec3 point, NoiseFilter noiseFilter)
+        {
+            return (noiseFilter.Evaluate(point));
         }
     }
 }

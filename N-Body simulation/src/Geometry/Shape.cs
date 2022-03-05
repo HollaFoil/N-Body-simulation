@@ -1,4 +1,5 @@
 ﻿using GlmSharp;
+using N_Body_simulation.src.Geometry.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace N_Body_simulation.src.Geometry
         private List<vec3> vertices;
         private List<uint> triangles;
         private List<vec3> normals;
+        private List<Color> colors;
+        private float MinElevation = 100000, MaxElevation = -100000;
         public Shape()
         {
             vertices = new List<vec3>();
@@ -39,6 +42,17 @@ namespace N_Body_simulation.src.Geometry
         public List<vec3> GetVertices()
         {
             return vertices;
+        }
+        public float[] GetColorsFloat()
+        {
+            float[] v = new float[colors.Count * 3];
+            for (int i = 0; i < colors.Count; i++)
+            {
+                v[3 * i] = colors[i].RNorm;
+                v[3 * i + 1] = colors[i].GNorm;
+                v[3 * i + 2] = colors[i].BNorm;
+            }
+            return v;
         }
         public float[] GetVerticesFloat()
         {
@@ -117,6 +131,25 @@ namespace N_Body_simulation.src.Geometry
             for (int i = 0; i < vertices.Count; i++)
             {
                 normals[i] = normals[i].NormalizedSafe;
+            }
+        }
+        public void FindMinMaxElevations()
+        {
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                MinElevation = MathF.Min(MinElevation, vertices[i].Length);
+                MaxElevation = MathF.Max(MaxElevation, vertices[i].Length);
+            }
+        }
+        public void CalculateColors(ColorSettings settings)
+        {
+            colors = new List<Color>(vertices.Count);
+            FindMinMaxElevations();
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                float length = vertices[i].Length;
+                float pos = (length - MinElevation) / (MaxElevation-MinElevation);
+                colors.Add(settings.GetColorAt(pos));
             }
         }
     }

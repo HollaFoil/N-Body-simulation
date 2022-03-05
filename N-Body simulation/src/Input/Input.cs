@@ -28,7 +28,7 @@ namespace N_Body_simulation.src.Input
             ThrowEvents(key);
 
         }
-        private static void Debug(Keys key, InputState state, ModifierKeys modifiers)
+        /*private static void Debug(Keys key, InputState state, ModifierKeys modifiers)
         {
             if (state != InputState.Press) return;
 
@@ -49,7 +49,7 @@ namespace N_Body_simulation.src.Input
             if (key == Keys.Up) settings.center.y *= val;
 
             Program.p.SetNoiseSettings(settings);
-        }
+        }*/
         private static void MouseCallback(Window window, double x, double y)
         {
             if (window == null) return;

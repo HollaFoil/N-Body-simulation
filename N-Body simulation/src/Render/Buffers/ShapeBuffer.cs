@@ -30,16 +30,20 @@ namespace N_Body_simulation.src.Render
         {
             float[] vertices = shape.GetVerticesFloat();
             float[] normals = shape.GetNormalsFloat();
+            float[] colors = shape.GetColorsFloat();
             uint[] triangles = shape.GetTriIndices().ToArray();
 
             glBindVertexArray(vao);
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-            fixed (void* ptr = &vertices[0]) fixed (void* ptr2 = &normals[0])
+            fixed (void* ptr = &vertices[0]) 
+            fixed (void* ptr2 = &normals[0]) 
+            fixed (void* ptr3 = &colors[0])
             {
-                glBufferData(GL_ARRAY_BUFFER, 2 * sizeof(float) * vertices.Length, null, GL_DYNAMIC_DRAW);
+                glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(float) * vertices.Length, null, GL_DYNAMIC_DRAW);
                 glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * vertices.Length, ptr);
                 glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * vertices.Length, sizeof(float) * vertices.Length, ptr2);
+                glBufferSubData(GL_ARRAY_BUFFER, 2 * sizeof(float) * vertices.Length, sizeof(float) * vertices.Length, ptr3);
             }
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -52,8 +56,10 @@ namespace N_Body_simulation.src.Render
 
             glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * sizeof(float), (void*)0);
             glVertexAttribPointer(1, 3, GL_FLOAT, false, 3 * sizeof(float), (void*) (sizeof(float) * vertices.Length));
+            glVertexAttribPointer(2, 3, GL_FLOAT, false, 3 * sizeof(float), (void*)(2 * sizeof(float) * vertices.Length));
             glEnableVertexAttribArray(0);
             glEnableVertexAttribArray(1);
+            glEnableVertexAttribArray(2);
             Elements = triangles.Length;
         }
 
