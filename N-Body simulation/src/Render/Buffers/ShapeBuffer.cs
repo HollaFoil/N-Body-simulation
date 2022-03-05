@@ -1,4 +1,5 @@
-﻿using N_Body_simulation.src.Geometry;
+﻿using N_Body_simulation.src.Entity;
+using N_Body_simulation.src.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,8 +64,10 @@ namespace N_Body_simulation.src.Render
             Elements = triangles.Length;
         }
 
-        public unsafe void Render()
+        public unsafe void Render(Planet planet)
         {
+            glUniformMatrix4fv(RenderCore.transformLocation, 1, false, planet.GetTransformMatrix().ToArray());
+            glUniformMatrix4fv(RenderCore.rotationLocation, 1, false, planet.GetRotationMatrix().ToArray());
             glBindVertexArray(vao);
             glDrawElements(GL_TRIANGLES, Elements, GL_UNSIGNED_INT, null);
         }

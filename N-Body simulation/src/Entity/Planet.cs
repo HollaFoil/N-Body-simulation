@@ -16,15 +16,22 @@ namespace N_Body_simulation.src.Entity
         private GeometrySettings GeometrySettings;
         private ColorSettings ColorSettings;
         private Shape Terrain;
-        uint resolution = 100;
+        public uint resolution = 100;
         public Planet()
         {
+            axis = new vec3(5, -1, 0).Normalized;
+            position = new vec3(0, 0, 0);
             CreateSettings();
             GeometrySettings = new GeometrySettings(1f);
             ColorSettings = new ColorSettings();
             GeneratePlanet();
         }
 
+        protected override void Update()
+        {
+            rotation += 0.003f;
+            //position.y += 0.1f;
+        }
         private void GeneratePlanet() 
         {
             List<vec3> vertices;

@@ -12,14 +12,19 @@ namespace N_Body_simulation.src.Entity
     {
         protected int ID = -1;
         protected vec3 position;
-        protected vec2 facing;
+        protected vec3 axis;
+        protected float rotation = 3.14f;
         public vec3 GetPosition()
         {
             return position;
         }
-        public vec2 GetYawPitch()
+        public mat4 GetTransformMatrix()
         {
-            return facing;
+            return mat4.Translate(position); ;
+        }
+        public mat4 GetRotationMatrix()
+        {
+            return mat4.Rotate(rotation, axis);
         }
         public int GetID ()
         {
@@ -28,6 +33,10 @@ namespace N_Body_simulation.src.Entity
         public void SetID (int i)
         {
             ID = i;
+        }
+        public override int GetHashCode()
+        {
+            return GetID();
         }
     }
 }

@@ -46,6 +46,9 @@ namespace N_Body_simulation.src.Input
 
             Noise.NoiseFilter[] filters = Program.p.GetNoiseSettings();
 
+            if (key == Keys.NumpadAdd) Program.p.resolution += (Program.p.resolution / 10);
+            if (key == Keys.NumpadSubtract) Program.p.resolution -= (Program.p.resolution / 10);
+
             if (key == Keys.Y) filters[debugInt].settings.persistance *= val;
             if (key == Keys.U) filters[debugInt].settings.baseRoughness *= val;
             if (key == Keys.I) filters[debugInt].settings.minvalue *= val;

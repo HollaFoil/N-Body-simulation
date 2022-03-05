@@ -3,6 +3,7 @@ using N_Body_simulation.src;
 using N_Body_simulation.src.Entity;
 using N_Body_simulation.src.Input;
 using N_Body_simulation.src.Render;
+using N_Body_simulation.src.Tick;
 using System;
 using static OpenGL.GL;
 using Timer = N_Body_simulation.src.Util.Timer;
@@ -26,6 +27,7 @@ namespace N_Body_simulation // Note: actual namespace depends on the project nam
                 GLFW.Glfw.PollEvents();
                 if (frameTimer.Next(out int elapsedMilliseconds))
                 {
+                    Tick.DoTick();
                     _camera.Update(elapsedMilliseconds);
                     RenderCore.Flush();
                 }

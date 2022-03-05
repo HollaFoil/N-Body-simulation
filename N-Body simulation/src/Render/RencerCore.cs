@@ -20,7 +20,8 @@ namespace N_Body_simulation.src.Render
         static Shape Ocean;
         static Shape Terrain;
 
-
+        public static int transformLocation;
+        public static int rotationLocation;
 
         static ShaderProgram program;
         static RenderCore()
@@ -33,6 +34,9 @@ namespace N_Body_simulation.src.Render
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS);
             glClearColor(0f, 0f, 0f, 1.0f);
+
+            transformLocation = glGetUniformLocation(GetProgram(), "transform");
+            rotationLocation = glGetUniformLocation(GetProgram(), "rotation");
             //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             //glEnable(GL_CULL_FACE);
             //glCullFace(GL_FRONT);
