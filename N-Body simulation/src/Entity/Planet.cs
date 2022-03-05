@@ -16,6 +16,7 @@ namespace N_Body_simulation.src.Entity
         private GeometrySettings GeometrySettings;
         private ColorSettings ColorSettings;
         private Shape Terrain;
+        uint resolution = 100;
         public Planet()
         {
             CreateSettings();
@@ -64,23 +65,22 @@ namespace N_Body_simulation.src.Entity
         }
         private void CreateSphere(out List<vec3> vertices, out List<uint> triangles)
         {
-            CubeMesh.CreateCubeMesh(250, out vertices, out triangles);
+            CubeMesh.CreateCubeMesh(resolution, out vertices, out triangles);
             GeometryGenerator.MorphCubeToSphere(ref vertices);
         }
         public Shape GetShapes()
         {
             return Terrain;
         }
-        /*public NoiseSettings GetNoiseSettings()
+        public NoiseFilter[] GetNoiseSettings()
         {
-            return NoiseSettings;
+            return NoiseFilters;
         }
-        public void SetNoiseSettings(NoiseSettings settings)
+        public void SetNoiseSettings(NoiseFilter[] noiseFilters)
         {
-            NoiseSettings = settings;
-            NoiseFilter.settings = settings;
+            NoiseFilters = noiseFilters;
             GeneratePlanet();
             Render.RenderCore.BufferPlanet(this);
-        }*/
+        }
     }
 }

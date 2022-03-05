@@ -14,6 +14,7 @@ namespace N_Body_simulation.src.Input
         private static float sensitivity = 0.05f;
         public static KeyCallback keyCallback = KeyCallback;
         public static MouseCallback mouseCallback = MouseCallback;
+        private static int debugInt = 0;
         public static void Init()
         {
             Glfw.SetKeyCallback(Render.Window.GetWindow(), keyCallback);
@@ -22,34 +23,41 @@ namespace N_Body_simulation.src.Input
         private static void KeyCallback(Window window, Keys key, int scancode, InputState state, ModifierKeys modifiers)
         {
             if (window == null) return;
-            //Debug(key, state, modifiers);
-            if (state == InputState.Repeat || !Keybinds.ContainsKey(key)) return;
+
+            if (state == InputState.Repeat || !Keybinds.ContainsKey(key))
+            {
+                Debug(key, state, modifiers);
+                return;
+            }
             IsKeyPressed[(int)Keybinds[key]] = !IsKeyPressed[(int)Keybinds[key]];
             ThrowEvents(key);
 
         }
-        /*private static void Debug(Keys key, InputState state, ModifierKeys modifiers)
+        private static void Debug(Keys key, InputState state, ModifierKeys modifiers)
         {
             if (state != InputState.Press) return;
 
             float val = 1.1f;
             if (modifiers == ModifierKeys.Control) val = 0.9f;
             //if (modifiers == ModifierKeys.Alt) val *= 0.92f;
+            if (key == Keys.Numpad0) debugInt = 0;
+            if (key == Keys.Numpad1) debugInt = 1;
+            if (key == Keys.Numpad2) debugInt = 2;
 
-            Noise.NoiseSettings settings = Program.p.GetNoiseSettings();
+            Noise.NoiseFilter[] filters = Program.p.GetNoiseSettings();
 
-            if (key == Keys.Y) settings.persistance *= val;
-            if (key == Keys.U) settings.baseRoughness *= val;
-            if (key == Keys.I) settings.minvalue *= val;
-            if (key == Keys.O) settings.roughness *= val;
-            if (key == Keys.P) settings.strength *= val;
+            if (key == Keys.Y) filters[debugInt].settings.persistance *= val;
+            if (key == Keys.U) filters[debugInt].settings.baseRoughness *= val;
+            if (key == Keys.I) filters[debugInt].settings.minvalue *= val;
+            if (key == Keys.O) filters[debugInt].settings.roughness *= val;
+            if (key == Keys.P) filters[debugInt].settings.strength *= val;
 
-            if (key == Keys.Right) settings.center.x *= val;
-            if (key == Keys.Down) settings.center.z *= val;
-            if (key == Keys.Up) settings.center.y *= val;
+            if (key == Keys.Right) filters[debugInt].settings.center.x *= val;
+            if (key == Keys.Down) filters[debugInt].settings.center.z *= val;
+            if (key == Keys.Up) filters[debugInt].settings.center.y *= val;
 
-            Program.p.SetNoiseSettings(settings);
-        }*/
+            Program.p.SetNoiseSettings(filters);
+        }
         private static void MouseCallback(Window window, double x, double y)
         {
             if (window == null) return;
