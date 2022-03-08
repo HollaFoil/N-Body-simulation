@@ -32,8 +32,8 @@ namespace N_Body_simulation.src.Noise
                 frequency *= settings.roughness;
                 amplitude *= settings.persistance;
             }
-
-            return (noiseValue - settings.minvalue) * settings.strength;
+            var elevation = (noiseValue - settings.minvalue) * settings.strength;
+            return elevation;
         }
     }
 }

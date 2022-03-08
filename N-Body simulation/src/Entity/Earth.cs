@@ -51,7 +51,7 @@ namespace N_Body_simulation.src.Entity
             NoiseSettings settingsContinents = new NoiseSettings();
             settingsContinents.baseRoughness = 0.71f;
             settingsContinents.strength = 0.25f;
-            settingsContinents.minvalue = 1f;
+            settingsContinents.minvalue = 1.12f;
             settingsContinents.numOfLayers = 4;
             settingsContinents.persistance = 0.34f;
             settingsContinents.roughness = 2.74f;

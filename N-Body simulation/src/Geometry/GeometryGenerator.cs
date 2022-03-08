@@ -46,7 +46,7 @@ namespace N_Body_simulation.src.Geometry
                 depths[i] = elevation;
 
                 
-                vertices[i] *= (1 + elevationCapped);
+                vertices[i] *= elevationCapped;
             }
             Console.WriteLine();
             //MathF.Max(0, noiseValue - settings.minvalue);
@@ -55,9 +55,11 @@ namespace N_Body_simulation.src.Geometry
         {
             float val1 = EvaluateAtPoint(point, filters[0]);
             float val2 = EvaluateAtPoint(point, filters[1]);
+            float mask = (val1 > 0) ? val1 : 0;
             float elevation1 = val1;
-            float elevation2 = (val2) * elevation1;
-            return elevation1 + elevation2;
+            float elevation2 = MathF.Max(0, (val2) * mask);
+            float elevation = elevation1 + elevation2;
+            return elevation;
         }
         public static float GetScaledElevation(float elevation)
         {

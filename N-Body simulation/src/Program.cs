@@ -41,7 +41,7 @@ namespace N_Body_simulation // Note: actual namespace depends on the project nam
         static private void Init()
         {
             p1 = new Earth();
-            p1.SetPosition(new vec3(0, 70f, 0));
+            p1.SetPosition(new vec3(-50, 70f, -50));
 
             Window.Init();
             Input.Init();
