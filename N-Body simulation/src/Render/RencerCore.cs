@@ -49,7 +49,7 @@ namespace N_Body_simulation.src.Render
 
         }
         
-        static public void BufferPlanet(Planet p)
+        static public void BufferEntity(IEntity p)
         {
             if (p.GetID() == -1)
             {
@@ -73,7 +73,7 @@ namespace N_Body_simulation.src.Render
         public static void RefreshProjectionMatrix()
         {
             mat4 projection;
-            projection = mat4.Perspective(glm.Radians(90.0f), 1920 / (float)1080, 0.0001f, 600.0f);
+            projection = mat4.Perspective(glm.Radians(90.0f), 1920 / (float)1080, 1f, 60000.0f);
             float[] p = projection.ToArray();
             int projectionLoc = glGetUniformLocation(GetProgram(), "projection");
             glUniformMatrix4fv(projectionLoc, 1, false, p);

@@ -44,7 +44,7 @@ namespace N_Body_simulation.src.Render
             Import(Glfw.GetProcAddress);
             glViewport(0, 0, width, height);
 
-            Glfw.SetInputMode(window, InputMode.Cursor, (int)CursorMode.Normal);
+            Glfw.SetInputMode(window, InputMode.Cursor, (int)CursorMode.Hidden);
         }
     }
 }

@@ -10,38 +10,38 @@ using N_Body_simulation.src.Noise;
 
 namespace N_Body_simulation.src.Entity
 {
-    internal class Planet : IEntity
+    internal class Earth : IEntity
     {
         private NoiseFilter[] NoiseFilters;
         private GeometrySettings GeometrySettings;
-        private ColorSettings ColorSettings;
-        private Shape Terrain;
-        public uint resolution = 100;
-        public Planet()
+        private ColorSettings[] ColorSettings;
+        
+        public Earth()
         {
             axis = new vec3(5, -1, 0).Normalized;
             position = new vec3(0, 0, 0);
             CreateSettings();
-            GeometrySettings = new GeometrySettings(1f);
-            ColorSettings = new ColorSettings();
-            GeneratePlanet();
+            GeometrySettings = new GeometrySettings(50f);
+            
+            GenerateMeshes();
         }
 
-        protected override void Update()
+        protected override void OnUpdate()
         {
-            rotation += 0.003f;
-            //position.y += 0.1f;
+            rotation += 0.01f;
+            
         }
-        private void GeneratePlanet() 
+        
+        protected override void GeneratePlanet(out Shape Terrain, uint resolution) 
         {
             List<vec3> vertices;
             List<uint> triangles;
 
-
-            CreateSphere(out vertices, out triangles);
+            CreateSphere(resolution, out vertices, out triangles);
             Terrain = new Shape(vertices, triangles);
 
             GeometryGenerator.TurnSphereIntoTerrain(Terrain, NoiseFilters);
+
             GeometryGenerator.ScaleShape(Terrain, GeometrySettings.Scale);
             Terrain.CalculateNormals();
             Terrain.CalculateColors(ColorSettings);
@@ -69,15 +69,25 @@ namespace N_Body_simulation.src.Entity
             NoiseFilter noiseContinents = new NoiseFilter(settingsContinents);
             NoiseFilter noiseHills = new NoiseFilter(settingsHills);
             NoiseFilters = new NoiseFilter[]{ noiseContinents, noiseHills};
+
+            ColorSettings = new ColorSettings[2];
+            ColorSettings[0] = new ColorSettings();
+            ColorSettings[1] = new ColorSettings();
+
+            ColorSettings[0].Add(new Mark(0.04f, new Color(164, 174, 91)));
+            ColorSettings[0].Add(new Mark(0.10f, new Color(112, 183, 19)));
+            ColorSettings[0].Add(new Mark(0.47f, new Color(145, 90, 42)));
+            ColorSettings[0].Add(new Mark(0.70f, new Color(125, 81, 45)));
+            ColorSettings[0].Add(new Mark(0.78f, new Color(255, 255, 255)));
+
+            ColorSettings[1].Add(new Mark(0.6f, new Color(30, 64, 128)));
+            ColorSettings[1].Add(new Mark(0.9f, new Color(30, 102, 204)));
+            ColorSettings[1].Add(new Mark(1f, new Color(68, 167, 196))); 
         }
-        private void CreateSphere(out List<vec3> vertices, out List<uint> triangles)
+        private void CreateSphere(uint resolution, out List<vec3> vertices, out List<uint> triangles)
         {
             CubeMesh.CreateCubeMesh(resolution, out vertices, out triangles);
             GeometryGenerator.MorphCubeToSphere(ref vertices);
-        }
-        public Shape GetShapes()
-        {
-            return Terrain;
         }
         public NoiseFilter[] GetNoiseSettings()
         {
@@ -86,8 +96,8 @@ namespace N_Body_simulation.src.Entity
         public void SetNoiseSettings(NoiseFilter[] noiseFilters)
         {
             NoiseFilters = noiseFilters;
-            GeneratePlanet();
-            Render.RenderCore.BufferPlanet(this);
+            GenerateMeshes();
+            Render.RenderCore.BufferEntity(this);
         }
     }
 }

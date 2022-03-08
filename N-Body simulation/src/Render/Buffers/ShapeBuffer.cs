@@ -64,7 +64,7 @@ namespace N_Body_simulation.src.Render
             Elements = triangles.Length;
         }
 
-        public unsafe void Render(Planet planet)
+        public unsafe void Render(IEntity planet)
         {
             glUniformMatrix4fv(RenderCore.transformLocation, 1, false, planet.GetTransformMatrix().ToArray());
             glUniformMatrix4fv(RenderCore.rotationLocation, 1, false, planet.GetRotationMatrix().ToArray());

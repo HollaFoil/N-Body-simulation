@@ -7,19 +7,13 @@ using System.Threading.Tasks;
 
 namespace N_Body_simulation.src.Geometry.Settings
 {
-    internal class ColorSettings
+    public class ColorSettings
     {
         List<Mark> Colors;
 
         public ColorSettings()
         {
             Colors = new List<Mark>();
-            Colors.Add(new Mark(0f, new Color(84, 134, 219)));
-            Colors.Add(new Mark(0.04f, new Color(164, 174, 91)));
-            Colors.Add(new Mark(0.10f, new Color(112, 183, 19)));
-            Colors.Add(new Mark(0.57f, new Color(145, 90, 42)));
-            //Colors.Add(new Mark(0.78f, new Color(125, 81, 45)));
-            Colors.Add(new Mark(0.78f, new Color(255, 255, 255)));
         }
 
         public void Add(Mark mark)
@@ -50,7 +44,7 @@ namespace N_Body_simulation.src.Geometry.Settings
             return new Color(R, G, B);
         }
     }
-    public struct Mark
+    public struct Mark : IComparable
     {
         public float Position = 0f;
         public Color Color;
@@ -58,6 +52,13 @@ namespace N_Body_simulation.src.Geometry.Settings
         {
             Position = pos;
             Color = col;
+        }
+
+        public int CompareTo(object obj)
+        {
+            Mark mark = (Mark)obj;
+            if (this.Position == mark.Position) return 0;
+            return this.Position < mark.Position ? -1 : 1;
         }
         public static bool operator >(Mark lhs, Mark rhs)
         {

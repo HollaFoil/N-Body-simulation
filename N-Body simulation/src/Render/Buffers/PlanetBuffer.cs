@@ -11,11 +11,11 @@ namespace N_Body_simulation.src.Render.Buffes
     internal class PlanetBuffer
     {
         ShapeBuffer TerrainBuffer;
-        Planet planet;
+        IEntity planet;
 
-        public PlanetBuffer(Planet planet)
+        public PlanetBuffer(IEntity planet)
         {
-            Shape TerrainShape = planet.GetShapes();
+            Shape TerrainShape = planet.GetShape();
             TerrainBuffer = new ShapeBuffer(TerrainShape);
             this.planet = planet;
         }
@@ -24,9 +24,9 @@ namespace N_Body_simulation.src.Render.Buffes
         {
             TerrainBuffer.Render(planet);
         }
-        public void Buffer(Planet planet)
+        public void Buffer(IEntity planet)
         {
-            Shape TerrainShape = planet.GetShapes();
+            Shape TerrainShape = planet.GetShape();
             TerrainBuffer.Buffer(TerrainShape);
         }
     }

@@ -32,10 +32,8 @@ namespace N_Body_simulation.src.Noise
                 frequency *= settings.roughness;
                 amplitude *= settings.persistance;
             }
-            
-            ///Need to keep rendering base sphere of the planet, water, for this to work.
-            noiseValue = MathF.Max(0, noiseValue - settings.minvalue);
-            return noiseValue * settings.strength;
+
+            return (noiseValue - settings.minvalue) * settings.strength;
         }
     }
 }

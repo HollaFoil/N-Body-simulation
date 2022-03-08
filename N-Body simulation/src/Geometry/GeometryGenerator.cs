@@ -27,27 +27,46 @@ namespace N_Body_simulation.src.Geometry
         public static void ScaleShape(Shape shape, float scaleFactor)
         {
             var vertices = shape.GetVertices();
+            var depths = shape.GetRawDepth();
             for (int i = 0; i < vertices.Count; i++)
             {
                 vertices[i] = vertices[i] * scaleFactor;
+                depths[i] = depths[i] * scaleFactor;
             }
         }
         public static void TurnSphereIntoTerrain(Shape sphere, Noise.NoiseFilter[] NoiseFilters)
         {
             var vertices = sphere.GetVertices();
+            var depths = sphere.GetRawDepth();
             for (int i = 0; i < vertices.Count; i++)
             {
-                float elevation = 0;
-                elevation += EvaluateAtPoint(vertices[i], NoiseFilters[0]);
-                float mask = elevation;
+                float elevation = GetUnscaledElevation(vertices[i], NoiseFilters);
+                float elevationCapped = GetScaledElevation(elevation);
 
-                elevation += EvaluateAtPoint(vertices[i], NoiseFilters[1]) * mask;
-                vertices[i] *= (1 + elevation);
+                depths[i] = elevation;
+
+                
+                vertices[i] *= (1 + elevationCapped);
             }
+            Console.WriteLine();
+            //MathF.Max(0, noiseValue - settings.minvalue);
+        }
+        public static float GetUnscaledElevation(vec3 point, NoiseFilter[] filters)
+        {
+            float val1 = EvaluateAtPoint(point, filters[0]);
+            float val2 = EvaluateAtPoint(point, filters[1]);
+            float elevation1 = val1;
+            float elevation2 = (val2) * elevation1;
+            return elevation1 + elevation2;
+        }
+        public static float GetScaledElevation(float elevation)
+        {
+            elevation = MathF.Max(elevation, 0);
+            return 1 + elevation;
         }
         public static float EvaluateAtPoint(vec3 point, NoiseFilter noiseFilter)
-        {
-            return (noiseFilter.Evaluate(point));
+        {   float val = noiseFilter.Evaluate(point);
+            return val;
         }
     }
 }

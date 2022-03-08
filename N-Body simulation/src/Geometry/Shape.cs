@@ -8,22 +8,31 @@ using System.Threading.Tasks;
 
 namespace N_Body_simulation.src.Geometry
 {
-    internal class Shape
+    public class Shape
     {
         private List<vec3> vertices;
         private List<uint> triangles;
         private List<vec3> normals;
         private List<Color> colors;
+        private List<float> rawDepth;
         private float MinElevation = 100000, MaxElevation = -100000;
+        private float MinElevationOcean = 100000, MaxElevationOcean = -100000;
         public Shape()
         {
             vertices = new List<vec3>();
+            rawDepth = new List<float>();
             triangles = new List<uint>();
         }
         public Shape(List<vec3> vertices, List<uint> triangles)
         {
+            
             this.vertices = vertices;
             this.triangles = triangles;
+            rawDepth = new List<float>(vertices.Count);
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                rawDepth.Add(1f);
+            }
         }
 
         public void AddVertex(vec3 v)
@@ -42,6 +51,10 @@ namespace N_Body_simulation.src.Geometry
         public List<vec3> GetVertices()
         {
             return vertices;
+        }
+        public List<float> GetRawDepth()
+        {
+            return rawDepth;
         }
         public float[] GetColorsFloat()
         {
@@ -137,20 +150,41 @@ namespace N_Body_simulation.src.Geometry
         {
             for (int i = 0; i < vertices.Count; i++)
             {
-                MinElevation = MathF.Min(MinElevation, vertices[i].Length);
-                MaxElevation = MathF.Max(MaxElevation, vertices[i].Length);
+                if (rawDepth[i] > 0)
+                {
+                    MinElevation = MathF.Min(MinElevation, rawDepth[i]);
+                    MaxElevation = MathF.Max(MaxElevation, rawDepth[i]);
+                }
+                else
+                {
+                    MinElevationOcean = MathF.Min(MinElevationOcean, rawDepth[i]);
+                    MaxElevationOcean = MathF.Max(MaxElevationOcean, rawDepth[i]);
+                }
             }
         }
-        public void CalculateColors(ColorSettings settings)
+        public void CalculateColors(ColorSettings[] settings)
         {
+            var landColors = settings[0];
+            var oceanColors = settings[1];
             colors = new List<Color>(vertices.Count);
             FindMinMaxElevations();
             for (int i = 0; i < vertices.Count; i++)
             {
-                float length = vertices[i].Length;
-                float pos = (length - MinElevation) / (MaxElevation-MinElevation);
-                colors.Add(settings.GetColorAt(pos));
+                float length = rawDepth[i];
+                if (length > MinElevation)
+                {
+                    float pos = (length - MinElevation) / (MaxElevation - MinElevation);
+                    colors.Add(landColors.GetColorAt(pos));
+                }
+                else
+                {
+                    float pos = (length - MinElevationOcean) / (MaxElevationOcean - MinElevationOcean);
+                    colors.Add(oceanColors.GetColorAt(pos));
+                }
+                
             }
+
+            
         }
     }
 }

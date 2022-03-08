@@ -40,14 +40,14 @@ namespace N_Body_simulation.src.Input
             float val = 1.1f;
             if (modifiers == ModifierKeys.Control) val = 0.9f;
             //if (modifiers == ModifierKeys.Alt) val *= 0.92f;
-            if (key == Keys.Numpad0) debugInt = 0;
-            if (key == Keys.Numpad1) debugInt = 1;
+            if (key == Keys.Alpha0) debugInt = 0;
+            if (key == Keys.Alpha1) debugInt = 1;
             if (key == Keys.Numpad2) debugInt = 2;
 
-            Noise.NoiseFilter[] filters = Program.p.GetNoiseSettings();
+            Noise.NoiseFilter[] filters = Program.p1.GetNoiseSettings();
 
-            if (key == Keys.NumpadAdd) Program.p.resolution += (Program.p.resolution / 10);
-            if (key == Keys.NumpadSubtract) Program.p.resolution -= (Program.p.resolution / 10);
+            if (key == Keys.Equal) Program.p1.resolution += (Program.p1.resolution / 10);
+            if (key == Keys.Minus) Program.p1.resolution -= (Program.p1.resolution / 10);
 
             if (key == Keys.Y) filters[debugInt].settings.persistance *= val;
             if (key == Keys.U) filters[debugInt].settings.baseRoughness *= val;
@@ -59,7 +59,7 @@ namespace N_Body_simulation.src.Input
             if (key == Keys.Down) filters[debugInt].settings.center.z *= val;
             if (key == Keys.Up) filters[debugInt].settings.center.y *= val;
 
-            Program.p.SetNoiseSettings(filters);
+            Program.p1.SetNoiseSettings(filters);
         }
         private static void MouseCallback(Window window, double x, double y)
         {
