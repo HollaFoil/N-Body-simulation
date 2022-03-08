@@ -126,7 +126,7 @@ namespace N_Body_simulation.src.Geometry
                 normals[a] += sum;
                 normals[b] += sum;
                 normals[c] += sum;
-
+        
                 if (repeatingVerts.TryGetValue(v1, out List<int> verts1))
                 {
                     foreach (var v in verts1) if (v != a) normals[v] += sum;
@@ -143,7 +143,7 @@ namespace N_Body_simulation.src.Geometry
             }
             for (int i = 0; i < vertices.Count; i++)
             {
-                normals[i] = normals[i].NormalizedSafe;
+                normals[i] = -normals[i].NormalizedSafe;
             }
         }
         public void FindMinMaxElevations()

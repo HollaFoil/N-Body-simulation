@@ -13,9 +13,10 @@ uniform mat4 view;
 uniform mat4 projection;
 
 void main() {
-	gl_Position = projection * view * transform * rotation * vec4(lPos, 1.0);
-	pos = lPos;
+	vec4 worldpos = transform * rotation * vec4(lPos, 1.0);
+	gl_Position = projection * view * worldpos;
+	pos = vec3(worldpos.xyz);
 	color = lColor;
 
-	normal = normalize(vec3((rotation * vec4(lNormal, 1.0)).xyz));
+	normal = vec3((rotation * vec4(lNormal, 1.0)).xyz);
 }
