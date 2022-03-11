@@ -67,7 +67,7 @@ namespace N_Body_simulation.src.Render
         }
         static private unsafe void RenderBuffers()
         {
-            glUniformMatrix4fv(viewLoc, 1, false, Program._camera.GetLookAtMatrix().ToArray());
+            glUniformMatrix4fv(viewLoc, 1, false, Program.Camera.GetLookAtMatrix().ToArray());
             foreach (var buffer in Buffers.Values) buffer.Render();
         }
         public static void RefreshProjectionMatrix()

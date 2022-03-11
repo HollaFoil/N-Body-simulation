@@ -28,7 +28,7 @@ namespace N_Body_simulation.src.Entity
 
         protected override void OnUpdate()
         {
-            rotation += 0.01f;
+            rotation += 0.0008f;
             
         }
         

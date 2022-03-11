@@ -12,9 +12,12 @@ namespace N_Body_simulation.src.Geometry
     {
         private List<vec3> vertices;
         private List<uint> triangles;
+
         private List<vec3> normals;
-        private List<Color> colors;
+        private List<float> heightsNorm;
         private List<float> rawDepth;
+        private List<Color> gradientTexture;
+
         private float MinElevation = 100000, MaxElevation = -100000;
         private float MinElevationOcean = 100000, MaxElevationOcean = -100000;
         public Shape()
@@ -22,10 +25,11 @@ namespace N_Body_simulation.src.Geometry
             vertices = new List<vec3>();
             rawDepth = new List<float>();
             triangles = new List<uint>();
+            gradientTexture = new List<Color>();
         }
         public Shape(List<vec3> vertices, List<uint> triangles)
         {
-            
+            gradientTexture = new List<Color>();
             this.vertices = vertices;
             this.triangles = triangles;
             rawDepth = new List<float>(vertices.Count);
@@ -56,16 +60,9 @@ namespace N_Body_simulation.src.Geometry
         {
             return rawDepth;
         }
-        public float[] GetColorsFloat()
+        public List<float> GetHeightsNormalized()
         {
-            float[] v = new float[colors.Count * 3];
-            for (int i = 0; i < colors.Count; i++)
-            {
-                v[3 * i] = colors[i].RNorm;
-                v[3 * i + 1] = colors[i].GNorm;
-                v[3 * i + 2] = colors[i].BNorm;
-            }
-            return v;
+            return heightsNorm;
         }
         public float[] GetVerticesFloat()
         {
@@ -83,6 +80,17 @@ namespace N_Body_simulation.src.Geometry
                 v[3 * i] = list[i].x;
                 v[3 * i + 1] = list[i].y;
                 v[3 * i + 2] = list[i].z;
+            }
+            return v;
+        }
+        public float[] GetGradientTextureFloat()
+        {
+            float[] v = new float[gradientTexture.Count * 3];
+            for (int i = 0; i < gradientTexture.Count; i++)
+            {
+                v[3 * i] = gradientTexture[i].RNorm;
+                v[3 * i + 1] = gradientTexture[i].GNorm;
+                v[3 * i + 2] = gradientTexture[i].BNorm;
             }
             return v;
         }
@@ -162,24 +170,39 @@ namespace N_Body_simulation.src.Geometry
                 }
             }
         }
+        public void CreateGradientTexture(ColorSettings[] settings, float step = 0.01f)
+        {
+            for (float i = -1f; i <= 1f; i += step)
+            {
+                if (i <= 0)
+                {
+                    gradientTexture.Add(settings[1].GetColorAt(i + 1));
+                }
+                else
+                {
+                    gradientTexture.Add(settings[0].GetColorAt(i));
+                }
+            }
+        }
         public void CalculateColors(ColorSettings[] settings)
         {
             var landColors = settings[0];
             var oceanColors = settings[1];
-            colors = new List<Color>(vertices.Count);
+            heightsNorm = new List<float>(vertices.Count);
             FindMinMaxElevations();
+            CreateGradientTexture(settings);
             for (int i = 0; i < vertices.Count; i++)
             {
                 float length = rawDepth[i];
                 if (length > MinElevation)
                 {
                     float pos = (length - MinElevation) / (MaxElevation - MinElevation);
-                    colors.Add(landColors.GetColorAt(pos));
+                    heightsNorm.Add(pos);
                 }
                 else
                 {
                     float pos = (length - MinElevationOcean) / (MaxElevationOcean - MinElevationOcean);
-                    colors.Add(oceanColors.GetColorAt(pos));
+                    heightsNorm.Add(pos - 1.0f);
                 }
                 
             }

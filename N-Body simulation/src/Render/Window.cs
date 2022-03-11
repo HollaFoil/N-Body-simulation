@@ -12,7 +12,7 @@ namespace N_Body_simulation.src.Render
     {
         private static GLFW.Window window;
         private static string Title = "Voxel Engine";
-        private static int width = 1920, height = 1080;
+        private static int width = 1280, height = 720;
         public static void Init()
         {
             PrepareContext();

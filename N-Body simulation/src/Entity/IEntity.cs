@@ -19,7 +19,7 @@ namespace N_Body_simulation.src.Entity
         protected Shape[] Terrain = new Shape[4];
         private float[,] BitMapPositions = new float[,] { { 0f, 170f, 300f, 600f }, { 150f, 250f, 550f, 999999f } };
         protected Shape ActiveShape;
-        public uint resolution = 100;
+        public uint resolution = 400;
         protected void GenerateMeshes()
         {
             int res = (int)resolution;
@@ -75,11 +75,11 @@ namespace N_Body_simulation.src.Entity
         }
         public float GetDistanceFromCameraSquared()
         {
-            return (position - Program._camera.GetPosition()).LengthSqr;
+            return (position - Program.Camera.GetPosition()).LengthSqr;
         }
         public float GetDistanceFromCamera()
         {
-            return (position - Program._camera.GetPosition()).Length;
+            return (position - Program.Camera.GetPosition()).Length;
         }
         public void Buffer()
         {

@@ -10,11 +10,11 @@ using static OpenGL.GL;
 using Timer = N_Body_simulation.src.Util.Timer;
 using Window = N_Body_simulation.src.Render.Window;
 
-namespace N_Body_simulation // Note: actual namespace depends on the project name.
+namespace N_Body_simulation 
 {
     internal class Program
     {
-        public static Camera _camera;
+        public static Camera Camera;
         static Timer frameTimer;
         const int TargetFramerate = 60;
         public static Earth p1;
@@ -29,8 +29,8 @@ namespace N_Body_simulation // Note: actual namespace depends on the project nam
                 if (frameTimer.Next(out int elapsedMilliseconds))
                 {
                     Tick.DoTick();
-                    _camera.Update(elapsedMilliseconds);
-                    Console.WriteLine(_camera.GetPosition());
+                    Camera.Update(elapsedMilliseconds);
+                    Console.WriteLine(Camera.GetPosition());
                     RenderCore.Flush();
 
                 }
@@ -45,7 +45,7 @@ namespace N_Body_simulation // Note: actual namespace depends on the project nam
 
             Window.Init();
             Input.Init();
-            _camera = new Camera();
+            Camera = new Camera();
             frameTimer = new Timer(TargetFramerate);
         }
     }
